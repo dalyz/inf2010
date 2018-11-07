@@ -22,44 +22,52 @@ public class BinaryHeap<AnyType extends Comparable<? super AnyType>> extends Abs
 	this.min = min;
 	array = items;
 	// COMPLETEZ
-	// invoquez buildMinHeap() ou buildMaxHeap() en fonction du parametre min;
+	/* invoquez buildMinHeap() ou buildMaxHeap() en fonction du parametre min */
 	if (min == true) {
 		buildMinHeap();
-    }
+    	}
 	else if (min == false) {
 		buildMaxHeap();
-	}
-    
+		}
+    }
     public boolean offer( AnyType x )
     {
-    // regarder si c'est un max ou min heap	
-    	
+    /* regarder si c'est un max ou min heap	*/
 	if (x == null)
 	    throw new NullPointerException("Cannot insert null in a BinaryHeap");
 	
 	if( currentSize + 1 == array.length )
 	    doubleArray();
 	
-		//percolation up
+	/*percolation up */
 	int trou = ++currentSize;
 		for(; trou > 1 && x.compareTo(array[trou / 2]) < 0; trou /= 2)
 			array[trou] = array[trou / 2];
 		array[trou] = x;
 	return true; // Ã  quoi ca sert true vs false
     }
-    
+    /* Retourne l'élément à la position 1 (heap) */
     public AnyType peek()
     {
-	if(!isEmpty())
-	    return array[1];
-	
-	return null;
+    	return ((isEmpty()) ? null : array[1]);
     }
-    
+    /* Trouve et enleve le head du queue ou return null si la queue est vide*/
     public AnyType poll()
     {
-	//COMPLETEZ
+    if (isEmpty())
+    	return null;
+    else
+    	/* peek() return le array[1] */
+    	peek();
+    	/* Trouve et enleve le head */
+    	AnyType removedHeap = peek(); // array[1];
+    	currentSize = 1;
+    	for(int i = currentSize; i < size() - 1 ; i++)
+    		array[i] = array[i + 1];
+    	currentSize--;
+    	return removedHeap;
     }
+    
     
     public Iterator<AnyType> iterator()
     {
@@ -82,7 +90,7 @@ public class BinaryHeap<AnyType extends Comparable<? super AnyType>> extends Abs
     
     public boolean isEmpty()
     {
-	return currentSize == 0;
+	return size() == 0;
     }
     
     public int size()
@@ -146,8 +154,18 @@ public class BinaryHeap<AnyType extends Comparable<? super AnyType>> extends Abs
     private static <AnyType extends Comparable<? super AnyType>>
 				    void percolateDownMinHeap( AnyType[] array, int hole, int size, boolean heapIndexing )
     {
-	//COMPLETEZ
-    	
+	int child;
+	AnyType tmp;
+	for(tmp = array[hole]; leftChild(hole, heapIndexing) < size; hole = child) {
+		child = leftChild(hole, heapIndexing);
+		if(child != size - 1 && array[child].compareTo(array[child + 1]) < 0)
+			child++;
+		if(tmp.compareTo(array[child])<0)
+			array[hole] = array[child];
+		else
+			break;
+	}
+    	array[hole] = tmp;
     }
     
     /**
@@ -168,7 +186,18 @@ public class BinaryHeap<AnyType extends Comparable<? super AnyType>> extends Abs
     private static <AnyType extends Comparable<? super AnyType>> 
 				    void percolateDownMaxHeap( AnyType[] array, int hole, int size, boolean heapIndexing )
     {
-	//COMPLETEZ
+    	int child;
+    	AnyType tmp;
+    	for(tmp = array[hole]; leftChild(hole, heapIndexing ) < size; hole = child) {
+    		child = leftChild(hole, heapIndexing);
+    		if(child != size - 1 && array[child].compareTo(array[child + 1]) > 0)
+    			child++;
+    		if(tmp.compareTo(array[child])>0)
+    			array[hole] = array[child];
+    		else
+    			break;
+    	}
+        	array[hole] = tmp;
     }
     
     public static <AnyType extends Comparable<? super AnyType>>
@@ -238,15 +267,19 @@ public class BinaryHeap<AnyType extends Comparable<? super AnyType>> extends Abs
     }
     
     private class HeapIterator implements Iterator {
-	
+	/* Dans les notes de cours, ils ont un private int current = 0;
+	 * Alors, current < size() ou on met directe 0 < size();
+	 */
 	public boolean hasNext() {
-	    //COMPLETEZ
+	   return currentSize < size();
 	}
-
+	/* Note de cours cours 2, diapo 30 */
 	public Object next() throws NoSuchElementException, 
 				    ConcurrentModificationException, 
 				    UnsupportedOperationException {
-	    //COMPLETEZ
+	    if(!hasNext())
+	    	throw new java.util.NoSuchElementException();
+	    return array[currentSize++];
 	}
 	
 	public void remove() {
