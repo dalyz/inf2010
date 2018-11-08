@@ -215,15 +215,27 @@ public class BinaryHeap<AnyType extends Comparable<? super AnyType>> extends Abs
 				   void heapSort( AnyType[] a )
     {
 	//COMPLETEZ
+    	/**
     	BinaryHeap tri = new BinaryHeap(a, false);
-    	tri.buildMaxHeap();
+    	buildMaxHeap();
         for(int j = tri.size() - 1; j > 0; j--) {
-        		tri.swapReferences(1, j);
-        	tri.percolateDownMaxHeap(j, tri.size());
+        		swapReferences(1, j);
+        	percolateDownMaxHeap(j, tri.size()); // j = hole et tri.size() = dernier element du tableau
         }
         Iterator<AnyType> iter = tri.iterator();
         for (int i = tri.size(); i > 0; i--)
         	System.out.println(iter.next());
+        **/
+    	//AnyType[] b = (AnyType[]) new Comparable[a.length + 1];
+    	//int size = a.lenght;
+    	System.out.println("nombre d'elements du tableau a " + a.length);
+    	for ( int i = a.length / 2; i >= 0; i --)
+    		 percolateDownMaxHeap( a, i, a.length - 1, false );
+    	for (int i = a.length - 1; i > 0; i--) {
+    		swapReferences(a, 0, i);
+    		 percolateDownMaxHeap( a, 0, i, false );
+    	}
+    	
     }
     
     public static <AnyType extends Comparable<? super AnyType>>
