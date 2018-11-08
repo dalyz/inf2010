@@ -58,7 +58,7 @@ public class BinaryHeap<AnyType extends Comparable<? super AnyType>> extends Abs
 	}
 	return true; // Ã  quoi ca sert true vs false
     }
-    /* Retourne l'élément à la position 1 (heap) */
+    /* Retourne l'element de la position 1 (heap) */
     public AnyType peek()
     {
     	return ((isEmpty()) ? null : array[1]);
@@ -215,41 +215,47 @@ public class BinaryHeap<AnyType extends Comparable<? super AnyType>> extends Abs
 				   void heapSort( AnyType[] a )
     {
 	//COMPLETEZ
-    	/**
-    	BinaryHeap tri = new BinaryHeap(a, false);
-    	buildMaxHeap();
-        for(int j = tri.size() - 1; j > 0; j--) {
-        		swapReferences(1, j);
-        	percolateDownMaxHeap(j, tri.size()); // j = hole et tri.size() = dernier element du tableau
+    	
+    	BinaryHeap<AnyType> tri = new BinaryHeap<AnyType>(a, false);
+    	tri.buildMaxHeap();
+        for(int j = tri.size()-1; j >= 0; j--) {
+        	a[j] =(AnyType) tri.poll();
+        	tri.swapReferences(1, j);
+        	tri.percolateDownMaxHeap(1, j); // j = hole et tri.size() = dernier element du tableau
+        	
         }
-        Iterator<AnyType> iter = tri.iterator();
-        for (int i = tri.size(); i > 0; i--)
-        	System.out.println(iter.next());
-        **/
-    	//AnyType[] b = (AnyType[]) new Comparable[a.length + 1];
-    	//int size = a.lenght;
-    	System.out.println("nombre d'elements du tableau a " + a.length);
-    	for ( int i = a.length / 2; i >= 0; i --)
-    		 percolateDownMaxHeap( a, i, a.length - 1, false );
-    	for (int i = a.length - 1; i > 0; i--) {
-    		swapReferences(a, 0, i);
-    		 percolateDownMaxHeap( a, 0, i, false );
+       
+     //	for(int i = a.length -1; i>=0; i--)
+     			//a[i] =(AnyType) tri.poll();
+       // Iterator<AnyType> iter = tri.iterator();
+       // for (int i = tri.size(); i > 0; i--)
+        	//System.out.println(iter.next());
+        
+    
     	}
     	
-    }
+    	
+//    	for ( int i = a.length / 2; i >= 0; i --)
+//    		 percolateDownMaxHeap( a, i, a.length - 1, false );
+//    	for (int i = a.length - 1; i > 0; i--) {
+//    		swapReferences(a, 0, i);
+//    		 percolateDownMaxHeap( a, 0, i, false );
+  //  }
+    	
+    
+
     
     public static <AnyType extends Comparable<? super AnyType>>
 				   void heapSortReverse( AnyType[] a )
     {
-    	//COMPLETEZ
-    	BinaryHeap tri = new BinaryHeap(a, true);
+    	BinaryHeap<AnyType> tri = new BinaryHeap<AnyType>(a, false);
     	tri.buildMinHeap();
-        for(int j = tri.size() - 1; j > 0; j--) {
-        		tri.swapReferences(1, j);
-        	tri.percolateDownMinHeap(j, tri.size());
+        for(int j = tri.size()-1; j >= 0; j--) {
+        	a[j] =(AnyType) tri.poll();
+        	tri.swapReferences(1, j);
+        	tri.percolateDownMinHeap(1, j); 
         }
-     }
-    
+    }
     public String nonRecursivePrintFancyTree()
     {
 	String outputString = "";
