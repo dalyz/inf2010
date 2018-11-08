@@ -88,14 +88,14 @@ public class BinaryHeap<AnyType extends Comparable<? super AnyType>> extends Abs
     private void buildMinHeap()
     {
 	//COMPLETEZ
-    	for ( int i = currentSize / 2; i >= 0; i--)
+    	for ( int i = currentSize / 2; i > 0; i--)
     		percolateDownMinHeap(i, currentSize);
     }
     
     private void buildMaxHeap()
     {
 	//COMPLETEZ
-    	for (int i = currentSize / 2; i >= 0; i--)
+    	for (int i = currentSize / 2; i > 0; i--)
     		percolateDownMaxHeap(i, currentSize);
     }
     
@@ -221,6 +221,9 @@ public class BinaryHeap<AnyType extends Comparable<? super AnyType>> extends Abs
         		tri.swapReferences(1, j);
         	tri.percolateDownMaxHeap(j, tri.size());
         }
+        Iterator<AnyType> iter = tri.iterator();
+        for (int i = tri.size(); i > 0; i--)
+        	System.out.println(iter.next());
     }
     
     public static <AnyType extends Comparable<? super AnyType>>
@@ -240,6 +243,7 @@ public class BinaryHeap<AnyType extends Comparable<? super AnyType>> extends Abs
 	String outputString = "";
 	
 	//COMPLETEZ
+	
 
 	return outputString;
     }
@@ -283,16 +287,19 @@ public class BinaryHeap<AnyType extends Comparable<? super AnyType>> extends Abs
 	/* Dans les notes de cours, ils ont un private int current = 0;
 	 * Alors, current < size() ou on met directe 0 < size();
 	 */
+    
+    private int current = 0; // peut pas commencer a 0 ?
+    
 	public boolean hasNext() {
-	   return currentSize < size();
+	   return current < size();
 	}
 	/* Note de cours cours 2, diapo 30 */
-	public Object next() throws NoSuchElementException, 
+	public AnyType next() throws NoSuchElementException, 
 				    ConcurrentModificationException, 
 				    UnsupportedOperationException {
 	    if(!hasNext())
 	    	throw new NoSuchElementException();
-	    return array[currentSize++];
+	    return array[current++];
 	}
 	
 	public void remove() {
