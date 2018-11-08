@@ -38,9 +38,9 @@ public class Main
       System.out.println("Monceau max contruit element par element:");
       System.out.println( heap.printFancyTree() );
 
-      heap = new BinaryHeap<Integer>(items,false);
-      System.out.println("Monceau max contruit a partir d'un tableau:");
-      System.out.println( heap.printFancyTree() );
+      //heap = new BinaryHeap<Integer>(items,false);
+      //System.out.println("Monceau max contruit a partir d'un tableau:");
+     // System.out.println( heap.printFancyTree() );
 
       heap = new BinaryHeap<Integer>(items,true);
       System.out.println("Monceau min contruit a partir d'un tableau:");

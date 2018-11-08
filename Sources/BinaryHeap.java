@@ -20,7 +20,10 @@ public class BinaryHeap<AnyType extends Comparable<? super AnyType>> extends Abs
     public BinaryHeap( AnyType[] items, boolean min )
     {
 	this.min = min;
-	array = items;
+	array = (AnyType[]) new Comparable[ DEFAULT_CAPACITY + 1];
+	for (int i = 0 ; i < items.length; i++)
+		array[i + 1] = items[i];
+	currentSize = items.length;
 	// COMPLETEZ
 	/* invoquez buildMinHeap() ou buildMaxHeap() en fonction du parametre min */
 	if (min == true) {
@@ -30,6 +33,7 @@ public class BinaryHeap<AnyType extends Comparable<? super AnyType>> extends Abs
 		buildMaxHeap();
 		}
     }
+    
     public boolean offer( AnyType x )
     {
     /* regarder si c'est un max ou min heap	*/
@@ -41,9 +45,17 @@ public class BinaryHeap<AnyType extends Comparable<? super AnyType>> extends Abs
 	
 	/*percolation up */
 	int trou = ++currentSize;
+	if (min ==  true) {
 		for(; trou > 1 && x.compareTo(array[trou / 2]) < 0; trou /= 2)
 			array[trou] = array[trou / 2];
 		array[trou] = x;
+	}
+		/*percolation up */
+	else if (min == false) {
+			for(; trou > 1 && x.compareTo(array[trou / 2]) > 0; trou /= 2)
+				array[trou] = array[trou / 2];
+			array[trou] = x;
+	}
 	return true; // Ã  quoi ca sert true vs false
     }
     /* Retourne l'élément à la position 1 (heap) */
@@ -54,17 +66,16 @@ public class BinaryHeap<AnyType extends Comparable<? super AnyType>> extends Abs
     /* Trouve et enleve le head du queue ou return null si la queue est vide*/
     public AnyType poll()
     {
-    if (isEmpty())
+    AnyType removedHeap;
+	if (isEmpty())
     	return null;
     else
-    	/* peek() return le array[1] */
-    	peek();
-    	/* Trouve et enleve le head */
-    	AnyType removedHeap = peek(); // array[1];
-    	currentSize = 1;
-    	for(int i = currentSize; i < size() - 1 ; i++)
-    		array[i] = array[i + 1];
-    	currentSize--;
+    	removedHeap = array[1];
+    	array[ 1 ] = array[ currentSize-- ];
+    	if (array[1].compareTo(array[2]) < 0)
+    		percolateDownMinHeap(1, currentSize);
+    	else 
+    		percolateDownMaxHeap(1, currentSize);
     	return removedHeap;
     }
     
@@ -155,12 +166,12 @@ public class BinaryHeap<AnyType extends Comparable<? super AnyType>> extends Abs
 				    void percolateDownMinHeap( AnyType[] array, int hole, int size, boolean heapIndexing )
     {
 	int child;
-	AnyType tmp;
-	for(tmp = array[hole]; leftChild(hole, heapIndexing) < size; hole = child) {
+	AnyType tmp = array[hole];
+	for(; hole * 2 <= size; hole = child) {
 		child = leftChild(hole, heapIndexing);
-		if(child != size - 1 && array[child].compareTo(array[child + 1]) < 0)
+		if(child != size && array[child + 1].compareTo(array[child]) < 0)
 			child++;
-		if(tmp.compareTo(array[child])<0)
+		if(array[child].compareTo(tmp)<0)
 			array[hole] = array[child];
 		else
 			break;
@@ -187,38 +198,40 @@ public class BinaryHeap<AnyType extends Comparable<? super AnyType>> extends Abs
 				    void percolateDownMaxHeap( AnyType[] array, int hole, int size, boolean heapIndexing )
     {
     	int child;
-    	AnyType tmp;
-    	for(tmp = array[hole]; leftChild(hole, heapIndexing ) < size; hole = child) {
+    	AnyType tmp = array[hole];
+    	for(; hole * 2 <= size; hole = child) {
     		child = leftChild(hole, heapIndexing);
-    		if(child != size - 1 && array[child].compareTo(array[child + 1]) > 0)
+    		if(child != size && array[child + 1].compareTo(array[child]) > 0) // a verifier
     			child++;
-    		if(tmp.compareTo(array[child])>0)
+    		if(array[child].compareTo(tmp) > 0)
     			array[hole] = array[child];
     		else
     			break;
     	}
         	array[hole] = tmp;
-    }
+        }
     
     public static <AnyType extends Comparable<? super AnyType>>
 				   void heapSort( AnyType[] a )
     {
 	//COMPLETEZ
-    	buildMaxHeap();
-    	for(int j = a.length - 1; j >0;j--) {
-    		swapReferences(a,0,j);
-    	percolateDownMaxHeap(j, a.length);
-    }
+    	BinaryHeap tri = new BinaryHeap(a, false);
+    	tri.buildMaxHeap();
+        for(int j = tri.size() - 1; j > 0; j--) {
+        		tri.swapReferences(1, j);
+        	tri.percolateDownMaxHeap(j, tri.size());
+        }
     }
     
     public static <AnyType extends Comparable<? super AnyType>>
 				   void heapSortReverse( AnyType[] a )
     {
     	//COMPLETEZ
-    	buildMinHeap();
-        	for(int j = a.length - 1; j >0;j--) {
-        		swapReferences(a,0,j);
-        	percolateDownMinHeap(j, a.length);
+    	BinaryHeap tri = new BinaryHeap(a, true);
+    	tri.buildMinHeap();
+        for(int j = tri.size() - 1; j > 0; j--) {
+        		tri.swapReferences(1, j);
+        	tri.percolateDownMinHeap(j, tri.size());
         }
      }
     
@@ -278,7 +291,7 @@ public class BinaryHeap<AnyType extends Comparable<? super AnyType>> extends Abs
 				    ConcurrentModificationException, 
 				    UnsupportedOperationException {
 	    if(!hasNext())
-	    	throw new java.util.NoSuchElementException();
+	    	throw new NoSuchElementException();
 	    return array[currentSize++];
 	}
 	
